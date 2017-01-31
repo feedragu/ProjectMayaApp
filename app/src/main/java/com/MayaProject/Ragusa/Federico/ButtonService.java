@@ -678,17 +678,6 @@ public class ButtonService extends Service implements
             @Override
             public void onClick(View view) {
                 isListening=false;
-                try {
-                    Intent intent = new Intent(ButtonService.this, NotificationActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    startActivity(intent);
-                    /*broadcastIntent.setAction(mBroadcastIntegerAction);
-                    broadcastIntent.putExtra("prova", "ciao qui funziona tutto");
-                    Log.i(TAG, "onClick: ");
-                    sendBroadcast(broadcastIntent);*/
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
                 if (musicIsPlaying) {
                     listenForSpeech();
                     new CountDownTimer(2000, 1000) {
@@ -701,20 +690,20 @@ public class ButtonService extends Service implements
                         }
                     }.start();
                 } else {
-                    /*if(sr!=null) {
+                    if(sr!=null) {
                         sr.destroy();
                         sr = SpeechRecognizer.createSpeechRecognizer(ButtonService.this);
                         sr.setRecognitionListener(ButtonService.this);
                         /*paramMusic.width=WindowManager.LayoutParams.WRAP_CONTENT;
                         paramMusic.height=WindowManager.LayoutParams.WRAP_CONTENT;
                         paramMusic.x+= (int) (overlayedButton.getX()/2f);
-                        wm.updateViewLayout(buttonView, paramMusic);
+                        wm.updateViewLayout(buttonView, paramMusic);*/
                         listenForSpeech();
                     }else  {
                         sr = SpeechRecognizer.createSpeechRecognizer(ButtonService.this);
                         sr.setRecognitionListener(ButtonService.this);
                         listenForSpeech();
-                    }*/
+                    }
                 }
                 recognizer.stop();
             }
