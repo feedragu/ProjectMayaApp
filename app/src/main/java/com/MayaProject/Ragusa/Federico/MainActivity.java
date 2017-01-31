@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,10 +17,15 @@ import com.txusballesteros.bubbles.BubblesManager;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.cmu.pocketsphinx.demo.R;
+
+import static ai.api.AIDataService.TAG;
 
 public class MainActivity extends Activity {
 
@@ -31,6 +38,31 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        PackageManager pm = getPackageManager();
+        try
+        {
+            PackageInfo packageInfo = pm.getPackageInfo(getPackageName(), PackageManager.GET_PERMISSIONS);
+            String[] requestedPermissions = null;
+            Log.i(TAG, "onCreate: ");
+            if (packageInfo != null) {
+                requestedPermissions = packageInfo.requestedPermissions;
+            }
+
+            if (requestedPermissions.length > 0)
+            {
+                List<String> requestedPermissionsList = Arrays.asList(requestedPermissions);
+                ArrayList<String> requestedPermissionsArrayList = new ArrayList<String>();
+                requestedPermissionsArrayList.addAll(requestedPermissionsList);
+
+                Log.i("boh non so", ""+requestedPermissionsArrayList);
+            }
+        }
+        catch (PackageManager.NameNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+
         /*Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
         startActivity(intent);*/
         //checkdrawPermission();
