@@ -1146,11 +1146,9 @@ public class ButtonService extends Service implements
 
     public void playMusic(String song, TextToSpeech t1, String s) {
         for (int i = 0; i < arrayList.size(); i++) {
+            Log.i(TAG, "playMusic: "+arrayList.get(i).getSongTitle().toLowerCase());
             if (arrayList.get(i).getSongTitle().toLowerCase().contains(song.toLowerCase())) {
                 t1.speak("riproduco", TextToSpeech.QUEUE_FLUSH, null, "maya");
-                t1.setLanguage(Locale.UK);
-                t1.speak(s.substring(s.indexOf(" ")), TextToSpeech.QUEUE_ADD, null, "maya");
-                t1.setLanguage(Locale.ITALIAN);
                 player = MediaPlayer.create(this, Uri.parse(arrayList.get(i).getPath()));
                 totalDuration = player.getDuration();
                 player.setLooping(false);

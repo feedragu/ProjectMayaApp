@@ -1,5 +1,6 @@
 package com.MayaProject.Ragusa.Federico;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.support.annotation.RequiresApi;
 import android.util.Log;
 
 import com.txusballesteros.bubbles.BubblesManager;
@@ -31,9 +33,13 @@ public class MainActivity extends Activity {
 
     private static final int RESULT_PERMISSION =1 ;
     public final static int REQUEST_CODE = -1010101;
+    final private int ASK_MULTIPLE_PERMISSION_REQUEST_CODE = 124;
     private SharedPreferences preferences;
     private BubblesManager bubblesManager;
+    private String[] permission;
+    private ArrayList<String> list=new ArrayList<>();
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +60,38 @@ public class MainActivity extends Activity {
                 List<String> requestedPermissionsList = Arrays.asList(requestedPermissions);
                 ArrayList<String> requestedPermissionsArrayList = new ArrayList<String>();
                 requestedPermissionsArrayList.addAll(requestedPermissionsList);
+                for(int i=0; i<requestedPermissionsArrayList.size(); i++) {
+                    if(pm.checkPermission(requestedPermissionsArrayList.get(i), getPackageName()) == PackageManager.PERMISSION_GRANTED) {
+                        continue;
+                    }else {
+                        list.add(requestedPermissionsArrayList.get(i));
+                    }
+                }
+
+                if(list.size()>0) {
+                    permission=new String[list.size()];
+                    for(int j=0; j<list.size(); j++) {
+                        permission[j]=list.get(j);
+                    }
+
+                    requestPermissions(new String[]{
+                                    Manifest.permission.READ_CONTACTS,
+                                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
+                                    Manifest.permission.KILL_BACKGROUND_PROCESSES,
+                                    Manifest.permission.SYSTEM_ALERT_WINDOW,
+                                    Manifest.permission.RECORD_AUDIO,
+                                    Manifest.permission.CALL_PHONE,
+                                    Manifest.permission.ACCESS_NETWORK_STATE,
+                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            },
+                            ASK_MULTIPLE_PERMISSION_REQUEST_CODE);
+
+                    Intent resultIntent = new Intent();
+                    setResult(Activity.RESULT_OK, resultIntent);
+                    finish();
+                }
+
+
 
                 Log.i("boh non so", ""+requestedPermissionsArrayList);
             }
