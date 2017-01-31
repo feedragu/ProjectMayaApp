@@ -73,7 +73,8 @@
         <activity
             android:name="com.MayaProject.Ragusa.Federico.PocketSphinxActivity"
             android:label="@string/app_name" />
-        <activity android:name="com.MayaProject.Ragusa.Federico.PermissionActivity" />
+        <activity android:name="com.MayaProject.Ragusa.Federico.PermissionActivity"
+            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar"/>
         <activity
             android:name="com.MayaProject.Ragusa.Federico.MeteoActivity"
             android:label="@string/title_activity_meteo"

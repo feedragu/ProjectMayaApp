@@ -68,32 +68,7 @@ public class MainActivity extends Activity {
                     }
                 }
 
-                if(list.size()>0) {
-                    permission=new String[list.size()];
-                    for(int j=0; j<list.size(); j++) {
-                        permission[j]=list.get(j);
-                    }
 
-                    requestPermissions(new String[]{
-                                    Manifest.permission.READ_CONTACTS,
-                                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION,
-                                    Manifest.permission.KILL_BACKGROUND_PROCESSES,
-                                    Manifest.permission.SYSTEM_ALERT_WINDOW,
-                                    Manifest.permission.RECORD_AUDIO,
-                                    Manifest.permission.CALL_PHONE,
-                                    Manifest.permission.ACCESS_NETWORK_STATE,
-                                    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            },
-                            ASK_MULTIPLE_PERMISSION_REQUEST_CODE);
-
-                    Intent resultIntent = new Intent();
-                    setResult(Activity.RESULT_OK, resultIntent);
-                    finish();
-                }
-
-
-
-                Log.i("boh non so", ""+requestedPermissionsArrayList);
             }
         }
         catch (PackageManager.NameNotFoundException e)
@@ -101,32 +76,46 @@ public class MainActivity extends Activity {
             e.printStackTrace();
         }
 
+        if(list.size()>0) {
+            permission=new String[list.size()];
+            for(int j=0; j<list.size(); j++) {
+                permission[j]=list.get(j);
+            }
+
+            Intent i=new Intent(this, PermissionActivity.class);
+            i.putExtra("permission", permission);
+
+            startActivityForResult(i, RESULT_PERMISSION);
+        }else {
+            preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            Log.i("boh", String.valueOf(preferences.getBoolean(getString(R.string.permission_granted), false)));
+
+            boolean b=preferences.getBoolean(getString(R.string.permission_granted), false);
+            if(!b) {
+                startActivityForResult(new Intent(this, PermissionActivity.class), RESULT_PERMISSION);
+                LinkedHashMap<String, String> aMap = new LinkedHashMap<String, String>();
+                aMap.put("corriere", "http://xml.corriereobjects.it/rss/homepage.xml");
+                aMap.put("repubblica", "http://www.repubblica.it/rss/homepage/rss2.0.xml");
+                aMap.put("messaggero", "http://www.ilmessaggero.it/rss/home.xml");
+                aMap.put("gazzetta dello sport", "http://www.gazzetta.it/rss/home.xml");
+                aMap.put("sole 24 ore", "http://www.ilsole24ore.com/rss/primapagina.xml");
+                aMap.put("bbc", "http://feeds.bbci.co.uk/news/rss.xml?edition=int#");
+                saveMap(aMap);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean(getString(R.string.permission_granted), true);
+                editor.commit();
+
+            }else {
+                checkDrawOverlayPermission();
+
+            }
+        }
+
         /*Intent intent=new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS");
         startActivity(intent);*/
         //checkdrawPermission();
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Log.i("boh", String.valueOf(preferences.getBoolean(getString(R.string.permission_granted), false)));
 
-        boolean b=preferences.getBoolean(getString(R.string.permission_granted), false);
-        if(!b) {
-        startActivityForResult(new Intent(this, PermissionActivity.class), RESULT_PERMISSION);
-            LinkedHashMap<String, String> aMap = new LinkedHashMap<String, String>();
-            aMap.put("corriere", "http://xml.corriereobjects.it/rss/homepage.xml");
-            aMap.put("repubblica", "http://www.repubblica.it/rss/homepage/rss2.0.xml");
-            aMap.put("messaggero", "http://www.ilmessaggero.it/rss/home.xml");
-            aMap.put("gazzetta dello sport", "http://www.gazzetta.it/rss/home.xml");
-            aMap.put("sole 24 ore", "http://www.ilsole24ore.com/rss/primapagina.xml");
-            aMap.put("bbc", "http://feeds.bbci.co.uk/news/rss.xml?edition=int#");
-            saveMap(aMap);
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(getString(R.string.permission_granted), true);
-            editor.commit();
-
-        }else {
-            checkDrawOverlayPermission();
-
-        }
     }
 
     private void startActivityForResult(Intent intent) {
