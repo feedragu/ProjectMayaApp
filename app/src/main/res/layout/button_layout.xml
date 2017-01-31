@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/moveThis"
+    android:layout_width="match_parent"
+    android:layout_height="165dp"
+    android:padding="10dp"
+    card_view:cardBackgroundColor="#eeffffff"
+    card_view:cardCornerRadius="10dp"
+    card_view:cardElevation="5dp"
+    card_view:contentPadding="5dp">
+
+    <android.support.percent.PercentRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/rel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent_back"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="bottom">
+
+
+        <ImageButton
+            android:id="@+id/play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@color/transparent_back"
+            android:src="@drawable/play" />
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/musicSeek"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/imageButton4"
+            android:background="@color/transparent_back"
+            android:src="@drawable/start" />
+
+        <ImageButton
+            android:id="@+id/imageButton4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/musicSeek"
+            android:layout_alignParentStart="true"
+            android:background="@color/transparent_back"
+            android:src="@drawable/shuffleb" />
+
+        <SeekBar
+            android:id="@+id/musicSeek"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/play" />
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/musicSeek"
+            android:layout_marginTop="12dp"
+            android:elevation="0dp"
+            app:cardBackgroundColor="#f54e88ec"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="10dp">
+
+            <android.support.percent.PercentRelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:elevation="0dp">
+
+                <TextView
+                    android:id="@+id/musicText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="ciao"
+                    android:textAppearance="@style/TextAppearance.AppCompat"
+                    android:textColor="@color/cardview_light_background"
+                    android:textSize="15sp" />
+            </android.support.percent.PercentRelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <ImageButton
+            android:id="@+id/forward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/musicSeek"
+            android:layout_toStartOf="@+id/imageButton"
+            android:background="@color/transparent_back"
+            android:src="@drawable/end"
+            app:layout_widthPercent="18%" />
+
+        <ImageButton
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/musicSeek"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="7dp"
+            android:background="@color/transparent_back"
+            android:src="@drawable/repeat" />
+
+
+    </android.support.percent.PercentRelativeLayout>
+</android.support.v7.widget.CardView>
