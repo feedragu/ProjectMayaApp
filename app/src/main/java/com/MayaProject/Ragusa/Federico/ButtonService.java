@@ -2084,6 +2084,14 @@ public class ButtonService extends Service implements
         googleSpeech2(speech);
     }
 
+    public void showNotification(JSONObject j) {
+        googleSpeech4(speech);
+        Intent intent = new Intent(ButtonService.this, NotificationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        Log.i(TAG, "showNotification: ");
+    }
+
     public void mailToDest(JSONObject j) {
         googleSpeech3(speech);
         startMoveMail();
