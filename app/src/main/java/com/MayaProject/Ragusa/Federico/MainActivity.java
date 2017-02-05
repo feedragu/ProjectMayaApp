@@ -86,13 +86,14 @@ public class MainActivity extends Activity {
             i.putExtra("permission", permission);
 
             startActivityForResult(i, RESULT_PERMISSION);
+
         }else {
             preferences = PreferenceManager.getDefaultSharedPreferences(this);
             Log.i("boh", String.valueOf(preferences.getBoolean(getString(R.string.permission_granted), false)));
 
             boolean b=preferences.getBoolean(getString(R.string.permission_granted), false);
             if(!b) {
-                startActivityForResult(new Intent(this, PermissionActivity.class), RESULT_PERMISSION);
+                //startActivityForResult(new Intent(this, PermissionActivity.class), RESULT_PERMISSION);
                 LinkedHashMap<String, String> aMap = new LinkedHashMap<String, String>();
                 aMap.put("corriere", "http://xml.corriereobjects.it/rss/homepage.xml");
                 aMap.put("repubblica", "http://www.repubblica.it/rss/homepage/rss2.0.xml");
@@ -143,10 +144,28 @@ public class MainActivity extends Activity {
         switch (requestCode) {
             case RESULT_PERMISSION: {
                 if (resultCode == RESULT_OK && null != data) {
-                    Intent svc = new Intent(this, ButtonService.class);
-                    svc.setAction(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                    startService(svc);
-                    finish();
+                    preferences = PreferenceManager.getDefaultSharedPreferences(this);
+                    Log.i("boh", String.valueOf(preferences.getBoolean(getString(R.string.permission_granted), false)));
+
+                    boolean b=preferences.getBoolean(getString(R.string.permission_granted), false);
+                    if(!b) {
+                        //startActivityForResult(new Intent(this, PermissionActivity.class), RESULT_PERMISSION);
+                        LinkedHashMap<String, String> aMap = new LinkedHashMap<String, String>();
+                        aMap.put("corriere", "http://xml.corriereobjects.it/rss/homepage.xml");
+                        aMap.put("repubblica", "http://www.repubblica.it/rss/homepage/rss2.0.xml");
+                        aMap.put("messaggero", "http://www.ilmessaggero.it/rss/home.xml");
+                        aMap.put("gazzetta dello sport", "http://www.gazzetta.it/rss/home.xml");
+                        aMap.put("sole 24 ore", "http://www.ilsole24ore.com/rss/primapagina.xml");
+                        aMap.put("bbc", "http://feeds.bbci.co.uk/news/rss.xml?edition=int#");
+                        saveMap(aMap);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putBoolean(getString(R.string.permission_granted), true);
+                        editor.commit();
+
+                    }else {
+                        checkDrawOverlayPermission();
+
+                    }
                 }
             }
             case REQUEST_CODE:
