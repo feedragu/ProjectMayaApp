@@ -346,9 +346,13 @@ public class ButtonService extends Service implements
         @Override
         public void onFinish() {
             Log.i("contenuto countdown", partial);
-            h = new HttpPars();
-            h.execute(partial);
-            sr.cancel();
+            if(!partial.equals(" ")) {
+                h = new HttpPars();
+                h.execute(partial);
+                sr.cancel();
+            }else {
+                recognizer.startListening(KWS_SEARCH);
+            }
             call = true;
             isRunnning=false;
             partial="";
@@ -650,11 +654,8 @@ public class ButtonService extends Service implements
             }.execute();
 
 
-
-
-
-
-
+            sr=SpeechRecognizer.createSpeechRecognizer(this);
+            sr.setRecognitionListener(this);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -1258,7 +1259,7 @@ public class ButtonService extends Service implements
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
                     RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             intent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
-            intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 400);
+            intent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 1000);
 
             sr.startListening(intent);
         } catch (Exception e) {
@@ -1430,6 +1431,7 @@ public class ButtonService extends Service implements
     @Override
     public void onReadyForSpeech(Bundle bundle) {
         Log.i("ready bitch", "c'mom fight");
+        partial="";
     }
 
     @Override
@@ -1530,6 +1532,11 @@ public class ButtonService extends Service implements
 
     @Override
     public void onEndOfSpeech() {
+        Log.i(TAG, "onEndOfSpeech: "+partial+"ciao");
+        if(partial.equals("")) {
+            partial=" ";
+            recognizer.startListening(KWS_SEARCH);
+        }
     }
 
     @Override
@@ -1541,6 +1548,9 @@ public class ButtonService extends Service implements
     public void onResults(Bundle bundle) {
         ArrayList<String> text = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         Log.i("boh", text.get(0));
+        if(text.get(0)==null) {
+            recognizer.startListening(KWS_SEARCH);
+        }
         if (text.get(0).equalsIgnoreCase("prossima")) {
             Intent i = new Intent(SERVICECMD);
             i.putExtra(CMDNAME, CMDNEXT);
@@ -2055,7 +2065,7 @@ public class ButtonService extends Service implements
             recognizer = defaultSetup()
                     .setAcousticModel(new File(assetsDir, "en-us-ptm"))
                     .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
-                    .setRawLogDir(assetsDir).setKeywordThreshold(1e-45f)
+                    .setRawLogDir(assetsDir).setKeywordThreshold(1e-10f)
                     //.setFloat("-beam", 1e-20f)
                     .getRecognizer();
             recognizer.addListener(this);
