@@ -1634,8 +1634,6 @@ public class ButtonService extends Service implements
         String text = hypothesis.getHypstr();
         Log.i(TAG, "onPartialResult: "+text);
         if (text.equals(KEYPHRASE4)) {
-            sr = SpeechRecognizer.createSpeechRecognizer(this);
-            sr.setRecognitionListener(this);
             recognizer.stop();
             isListening=false;
             listenForSpeech();
@@ -2057,7 +2055,7 @@ public class ButtonService extends Service implements
             recognizer = defaultSetup()
                     .setAcousticModel(new File(assetsDir, "en-us-ptm"))
                     .setDictionary(new File(assetsDir, "cmudict-en-us.dict"))
-                    .setRawLogDir(assetsDir).setKeywordThreshold(1e-20f)
+                    .setRawLogDir(assetsDir).setKeywordThreshold(1e-45f)
                     //.setFloat("-beam", 1e-20f)
                     .getRecognizer();
             recognizer.addListener(this);
