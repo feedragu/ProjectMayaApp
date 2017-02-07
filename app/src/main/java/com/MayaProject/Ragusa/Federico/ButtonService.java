@@ -6,6 +6,7 @@ import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
@@ -335,7 +336,7 @@ public class ButtonService extends Service implements
         }
     };
     private boolean isRunnning;
-    private CountDownTimer finishSpeak = new CountDownTimer(800,200) {
+    private CountDownTimer finishSpeak = new CountDownTimer(600,150) {
 
         @Override
         public void onTick(long l) {
@@ -1347,11 +1348,12 @@ public class ButtonService extends Service implements
         protected Channel doInBackground(String[] search) {
             {
                 String google = "http://www.google.com/search?q=" + search[0];
-                String charset = "UTF-8";
 
                 Document doc = null;
                 try {
-                    doc = Jsoup.connect(google).get();
+                    doc = Jsoup
+                            .connect(google).get();
+
                 } catch (Exception e) {
                     Log.i("prova", "errore");
                     e.printStackTrace();
@@ -1360,7 +1362,37 @@ public class ButtonService extends Service implements
                 Elements media = doc.select("[src]");
                 Elements imports = doc.select("link[href]");
 
-                Log.i("link", links.get(0).attr("abs:href"));
+                for(int i=0; i<links.size(); i++) {
+                    Log.i("link", links.get(i).attr("abs:href"));
+                }
+
+/*
+                try {
+
+                    // need http protocol, set this as a Google bot agent :)
+                    doc = Jsoup
+                            .connect(google)
+                            .userAgent(
+                                    "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)")
+                            .timeout(5000).get();
+
+                    // get all links
+                    Elements links = doc.select("a[href]");
+                    for (Element link : links) {
+                        String temp = link.attr("abs:href");
+                        Log.i("link", temp);
+                        if(temp.startsWith("/url?q=")){
+                            Log.i("link", temp);
+
+                        }
+
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+*/
 
 
             }
@@ -1790,9 +1822,9 @@ public class ButtonService extends Service implements
         Log.i("speech", speech);
         t1.speak(speech, TextToSpeech.QUEUE_FLUSH, null, "maya");
         sr.cancel();
-        while(t1.isSpeaking()) {
+        /*while(t1.isSpeaking()) {
 
-        }
+        }*/
     }
 
     private void googleSpeech3(String speech) {
@@ -2228,6 +2260,20 @@ public class ButtonService extends Service implements
             return;
         }
         startActivity(intent);
+
+    }
+
+    public void searchOnInternet(JSONObject j) throws JSONException {
+        JSONObject parameters = j.getJSONObject("parameters");
+        String ricerca = parameters.getString("any");
+        Intent intent = new Intent(Intent.ACTION_WEB_SEARCH);
+        String term = ricerca;
+        intent.putExtra(SearchManager.QUERY, term);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        this.startActivity(intent);
+        /*jp.execute(ricerca);
+        jp=new JSOUPParser();*/
+        googleSpeech4(speech);
 
     }
 
